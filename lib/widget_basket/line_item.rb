@@ -14,6 +14,10 @@ module WidgetBasket
       @qty += 1
     end
 
+    def set_quantity(value)
+      @qty = value if value >= 0
+    end
+
     def subtotal
       product.price * qty
     end

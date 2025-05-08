@@ -61,7 +61,7 @@ module WidgetBasket
       temp_qty = item.qty
       item.increment
       potential_total = calculate_total
-      item.instance_variable_set(:@qty, temp_qty) # Reset quantity
+      item.set_quantity(temp_qty) # Reset quantity using safe method
 
       if potential_total > MAX_TOTAL_AMOUNT
         raise TotalAmountExceededError, "Adding this item would exceed the maximum order value of #{MAX_TOTAL_AMOUNT}"
