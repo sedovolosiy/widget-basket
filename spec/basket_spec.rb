@@ -61,4 +61,57 @@ RSpec.describe WidgetBasket::Basket do
       expect { simple_basket.add("C") }.to raise_error(WidgetBasket::Catalogue::ProductNotFoundError)
     end
   end
+
+  describe "quantity limits" do
+    it "allows adding up to MAX_QUANTITY_PER_ITEM of the same item" do
+      described_class::MAX_QUANTITY_PER_ITEM.times { simple_basket.add("A") }
+      expect(simple_basket.line_items.first.qty).to eq(described_class::MAX_QUANTITY_PER_ITEM)
+    end
+
+    it "raises QuantityLimitExceededError when exceeding MAX_QUANTITY_PER_ITEM" do
+      described_class::MAX_QUANTITY_PER_ITEM.times { simple_basket.add("A") }
+      expect { simple_basket.add("A") }
+        .to raise_error(WidgetBasket::Basket::QuantityLimitExceededError)
+    end
+
+    it "applies limits independently per item" do
+      described_class::MAX_QUANTITY_PER_ITEM.times { simple_basket.add("A") }
+      expect { simple_basket.add("B") }.not_to raise_error
+    end
+  end
+
+  describe "total amount limits" do
+    let(:expensive_product) { WidgetBasket::Product.new("E", "Expensive", described_class::MAX_TOTAL_AMOUNT / 2.0) }
+    let(:catalogue_with_expensive) { WidgetBasket::Catalogue.new([product, product_b, expensive_product]) }
+    let(:basket_with_expensive) { described_class.new(catalogue: catalogue_with_expensive, delivery_rule: simple_delivery) }
+
+    it "allows orders up to MAX_TOTAL_AMOUNT" do
+      2.times { basket_with_expensive.add("E") }
+      expect(basket_with_expensive.total).to eq(described_class::MAX_TOTAL_AMOUNT)
+    end
+
+    it "raises TotalAmountExceededError when exceeding MAX_TOTAL_AMOUNT" do
+      2.times { basket_with_expensive.add("E") }
+      expect { basket_with_expensive.add("A") }
+        .to raise_error(WidgetBasket::Basket::TotalAmountExceededError)
+    end
+
+    it "considers delivery fees when checking MAX_TOTAL_AMOUNT" do
+      delivery_with_fee = WidgetBasket::Delivery::Tiered.new([{limit: 0, fee: 10.0}])
+      
+      near_limit_product = WidgetBasket::Product.new(
+        "N",
+        "Near Limit",
+        described_class::MAX_TOTAL_AMOUNT - 5.0  # Changed from -15.0 to -5.0
+      )
+      catalogue = WidgetBasket::Catalogue.new([near_limit_product])
+      basket = described_class.new(
+        catalogue: catalogue,
+        delivery_rule: delivery_with_fee
+      )
+
+      expect { basket.add("N") }
+        .to raise_error(WidgetBasket::Basket::TotalAmountExceededError)
+    end
+  end
 end

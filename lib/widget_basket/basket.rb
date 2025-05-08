@@ -57,11 +57,11 @@ module WidgetBasket
         raise QuantityLimitExceededError, "Cannot add more than #{MAX_QUANTITY_PER_ITEM} of the same item"
       end
 
-      # Calculate potential total by adding one more item
-      temp_qty = item.qty
-      item.increment
-      potential_total = calculate_total
-      item.set_quantity(temp_qty) # Reset quantity using safe method
+      # Calculate potential total including delivery fees by simulating the addition
+      current_qty = item.qty
+      item.set_quantity(current_qty + 1)
+      potential_total = calculate_total  # This already includes delivery fees
+      item.set_quantity(current_qty) # Reset quantity
 
       if potential_total > MAX_TOTAL_AMOUNT
         raise TotalAmountExceededError, "Adding this item would exceed the maximum order value of #{MAX_TOTAL_AMOUNT}"

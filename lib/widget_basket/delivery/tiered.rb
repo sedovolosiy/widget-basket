@@ -17,8 +17,9 @@ module WidgetBasket
       end
 
       def fee(subtotal)
+        return @thresholds.first[:fee].round(2) if subtotal < 0
         rule = @thresholds.reverse.find { |t| subtotal >= t[:limit] }
-        rule ? rule[:fee].round(2) : @thresholds.last[:fee].round(2)
+        rule ? rule[:fee].round(2) : @thresholds.first[:fee].round(2)
       end
 
       private
