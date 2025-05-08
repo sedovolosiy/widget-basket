@@ -40,15 +40,19 @@ module WidgetBasket
 
     private
 
-    def calculate_total
-      return 0.0 if @items.empty?
+    def calculate_total_with_items(items)
+      return 0.0 if items.empty?
       
-      gross = @items.values.sum(&:subtotal)
-      discounts = @offers.total_discount(@items, gross)
+      gross = items.values.sum(&:subtotal)
+      discounts = @offers.total_discount(items, gross)
       subtotal = gross - discounts
       delivery = @delivery_rule.fee(subtotal)
       
       (subtotal + delivery).round(2)
+    end
+
+    def calculate_total
+      calculate_total_with_items(@items)
     end
 
     def validate_can_add!(code)
@@ -57,11 +61,10 @@ module WidgetBasket
         raise QuantityLimitExceededError, "Cannot add more than #{MAX_QUANTITY_PER_ITEM} of the same item"
       end
 
-      # Calculate potential total including delivery fees by simulating the addition
-      current_qty = item.qty
-      item.set_quantity(current_qty + 1)
-      potential_total = calculate_total  # This already includes delivery fees
-      item.set_quantity(current_qty) # Reset quantity
+      # Calculate potential total including delivery fees without mutating the item's state
+      hypothetical_items = @items.dup
+      hypothetical_items[code] = item.dup.tap { |i| i.set_quantity(item.qty + 1) }
+      potential_total = calculate_total_with_items(hypothetical_items)
 
       if potential_total > MAX_TOTAL_AMOUNT
         raise TotalAmountExceededError, "Adding this item would exceed the maximum order value of #{MAX_TOTAL_AMOUNT}"
