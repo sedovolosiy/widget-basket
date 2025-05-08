@@ -16,6 +16,11 @@ module WidgetBasket
         round_discount(base_price * 0.5 * pairs)
       end
 
+      # Calculates the discount for the target product in the given line items
+      # @param line_items [Hash] The collection of line items
+      # @param previous_discounts [Float] Not used in this implementation as the half-price
+      #   offer is independent of other discounts. Parameter is reserved for future extensibility.
+      # @return [Float] The calculated discount amount
       def discount(line_items, previous_discounts = 0.0)
         item = line_items[@target_code]
         return 0.0 unless item
