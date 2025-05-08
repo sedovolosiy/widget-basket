@@ -9,6 +9,12 @@ module WidgetBasket
         super(priority: priority)
       end
 
+      # Applies the "half-price second item" discount to the given line item.
+      # @param line_item [Object] The line item to which the discount is applied.
+      # @param base_price [Float, nil] Optional. The base price to use for calculating the discount.
+      #   If not provided, the product's default price is used. This parameter is reserved for
+      #   potential future use cases where the base price might need to be overridden.
+      # @return [Float] The calculated discount amount.
       def apply(line_item, base_price = nil)
         return 0.0 unless line_item.product.code == @target_code && line_item.qty >= 2
         pairs = line_item.qty / 2  # each pair -> one item half‑price
