@@ -7,6 +7,7 @@ module WidgetBasket
   require_relative "widget_basket/line_item"
   require_relative "widget_basket/offers/base"
   require_relative "widget_basket/offers/half_price_second_item"
+  require_relative "widget_basket/offers/offer_set"
   require_relative "widget_basket/delivery/base"
   require_relative "widget_basket/delivery/tiered"
   require_relative "widget_basket/basket"

@@ -14,6 +14,11 @@ module WidgetBasket
       @qty += 1
     end
 
+    def set_quantity(value)
+      raise ArgumentError, "Quantity cannot be negative" if value < 0
+      @qty = value
+    end
+
     def subtotal
       product.price * qty
     end
