@@ -4,19 +4,32 @@ module WidgetBasket
   module Offers
     # "Buy one get the 2nd half‑price" for a specific product code
     class HalfPriceSecondItem < Base
-      def initialize(target_code)
+      def initialize(target_code, priority: 0)
         @target_code = target_code
+        super(priority: priority)
       end
 
-      def apply(line_item)
+      def apply(line_item, base_price = nil)
         return 0.0 unless line_item.product.code == @target_code && line_item.qty >= 2
         pairs = line_item.qty / 2  # each pair -> one item half‑price
-        (line_item.product.price * 0.5 * pairs).round(2)
+        base_price ||= line_item.product.price
+        round_discount(base_price * 0.5 * pairs)
       end
 
-      def discount(line_items)
+      def discount(line_items, previous_discounts = 0.0)
         item = line_items[@target_code]
-        apply(item) if item
+        return 0.0 unless item
+
+        # Calculate discount based on original price
+        apply(item)
+      end
+
+      protected
+
+      def validate_configuration!
+        raise InvalidOfferConfigurationError, "Target code cannot be nil" if @target_code.nil?
+        raise InvalidOfferConfigurationError, "Target code must be a string" unless @target_code.is_a?(String)
+        raise InvalidOfferConfigurationError, "Target code cannot be empty" if @target_code.empty?
       end
     end
   end
