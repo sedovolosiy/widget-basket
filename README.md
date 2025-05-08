@@ -10,7 +10,7 @@ This system implements a proof of concept for Acme Widget Co's new sales system,
 - Product catalogue management
 - Tiered delivery charges based on order value
 - Special offers implementation (e.g., buy-one-get-one-half-price)
-- Continuous Integration with GitHub Actions testing on multiple Ruby versions (2.7, 3.0, 3.1, 3.2)
+- Continuous Integration with GitHub Actions testing on multiple Ruby versions (3.0 - 3.4)
 
 ## Products
 
