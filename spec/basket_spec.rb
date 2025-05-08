@@ -114,4 +114,20 @@ RSpec.describe WidgetBasket::Basket do
         .to raise_error(WidgetBasket::Basket::TotalAmountExceededError)
     end
   end
+
+  describe "LineItem" do
+    let(:line_item) { WidgetBasket::LineItem.new(product) }
+
+    describe "#set_quantity" do
+      it "sets the quantity when value is non-negative" do
+        line_item.set_quantity(5)
+        expect(line_item.qty).to eq(5)
+      end
+
+      it "raises ArgumentError for negative quantity" do
+        expect { line_item.set_quantity(-1) }
+          .to raise_error(ArgumentError, "Quantity cannot be negative")
+      end
+    end
+  end
 end
