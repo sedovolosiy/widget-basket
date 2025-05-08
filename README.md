@@ -1,5 +1,7 @@
 # Widget Basket System - Acme Widget Co
 
+[![Tests](https://github.com/piktochart/widget-basket/actions/workflows/test.yml/badge.svg)](https://github.com/piktochart/widget-basket/actions/workflows/test.yml)
+
 A Ruby implementation of a shopping basket system for Acme Widget Co, providing a flexible solution for product management, delivery charges, and special offers.
 
 ## Overview
@@ -8,6 +10,7 @@ This system implements a proof of concept for Acme Widget Co's new sales system,
 - Product catalogue management
 - Tiered delivery charges based on order value
 - Special offers implementation (e.g., buy-one-get-one-half-price)
+- Continuous Integration with GitHub Actions testing on multiple Ruby versions (2.7, 3.0, 3.1, 3.2)
 
 ## Products
 
