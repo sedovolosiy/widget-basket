@@ -62,8 +62,8 @@ module WidgetBasket
       end
 
       # Calculate potential total including delivery fees without mutating the item's state
-      hypothetical_items = @items.dup
-      hypothetical_items[code] = item.dup.tap { |i| i.set_quantity(item.qty + 1) }
+      hypothetical_items = @items.transform_values(&:dup)
+      hypothetical_items[code].increment
       potential_total = calculate_total_with_items(hypothetical_items)
 
       if potential_total > MAX_TOTAL_AMOUNT
