@@ -1,6 +1,6 @@
 # Widget Basket System - Acme Widget Co
 
-[![Tests](https://github.com/piktochart/widget-basket/actions/workflows/test.yml/badge.svg)](https://github.com/piktochart/widget-basket/actions/workflows/test.yml)
+[![Tests](https://github.com/sedovolosiy/widget-basket/actions/workflows/test.yml/badge.svg)](https://github.com/sedovolosiy/widget-basket/actions/workflows/test.yml)
 
 A Ruby implementation of a shopping basket system for Acme Widget Co, providing a flexible solution for product management, delivery charges, and special offers.
 
